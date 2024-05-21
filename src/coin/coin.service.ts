@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Coins } from './coin.entity';
-import { Repository } from 'typeorm';
+import { OrderedBulkOperation, Repository } from 'typeorm';
 import { Users } from 'src/user/user.entity';
 import { CoinStat } from './coin_stat.entity';
 
@@ -18,8 +18,30 @@ export class CoinService {
         private userRepository: Repository<Users>
     ) {}
 
-    async findAll(): Promise<Coins[]> {
-        return await this.coinRepository.find();
+    async findAll(sortBy: string, orderDirection: string): Promise<Coins[]> {
+        let order = {};
+        if (!orderDirection) {
+            orderDirection = 'desc'
+        }
+        switch (sortBy) {
+            case 'created':
+                order = { 'coin.created_at': orderDirection };
+                break;
+            case 'trade':
+                order = { 'coinstat.last_trade_date': orderDirection };
+                break;
+            case 'funded':
+                order = { 'coinstat.total_funded': orderDirection };
+                break;
+            default:
+                order = { 'coinstat.last_trade_date': orderDirection };
+                break;
+        }
+    
+        return await this.coinRepository.createQueryBuilder('coin')
+            .leftJoinAndSelect('coin.coinStat', 'coinstat')
+            .orderBy(order)
+            .getMany();
     }
 
     async findOne(id: number): Promise<Coins> {
@@ -56,5 +78,9 @@ export class CoinService {
             })
         })
         await this.coinStatRepository.save(coinstat)
+
+        coin.coinStat = coinstat
+        await this.coinRepository.save(coin);
+
     }
 }

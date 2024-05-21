@@ -7,7 +7,7 @@ import { UserCoin } from 'src/user_coin/user_coin.entity';
 import { Coins } from 'src/coin/coin.entity';
 
 @Module({
-  imports:[
+  imports: [
     TypeOrmModule.forFeature([Users, UserCoin, Coins])
   ],
   controllers: [UserController],

@@ -67,17 +67,19 @@ export class TradeService {
             }
         });
 
-        console.log('Before update:', usercoin.amount, coinstat.stock, coinstat.total_funded);
+        coinstat.last_trade_date = new Date();
+
+        //console.log('Before update:', usercoin.amount, coinstat.stock, coinstat.total_funded);
         if (type === 'buy') {
           usercoin.amount += amount;
           coinstat.stock -= amount;
           coinstat.total_funded += price;
-          console.log('After buy:', usercoin.amount, coinstat.stock, coinstat.total_funded);
+          //console.log('After buy:', usercoin.amount, coinstat.stock, coinstat.total_funded);
         } else if (type === 'sell') {
           usercoin.amount -= amount;
           coinstat.stock += amount;
           coinstat.total_funded -= price;
-          console.log('After sell:', usercoin.amount, coinstat.stock, coinstat.total_funded);
+          //console.log('After sell:', usercoin.amount, coinstat.stock, coinstat.total_funded);
         }
         
         const trade = this.tradeRepository.create({
@@ -95,6 +97,8 @@ export class TradeService {
             amount,
             price
         })
+
+        
 
         await this.usercoinRepository.save(usercoin)
         await this.coinstatRepository.save(coinstat)
