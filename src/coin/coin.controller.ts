@@ -8,7 +8,7 @@ import { Trade } from 'src/trade/trade.entity';
 export class CoinController {
     constructor(private coinService: CoinService) {}
 
-    //모든 코인 정보 (name, ticker, description, created_at)
+    //모든 코인 정보
     //sort: created - 생성일자, funded - 시가총액, trade (디폴트) - 거래일
     //direction: asc - 오름차순, desc - 내림차순
     @Get()
@@ -19,7 +19,7 @@ export class CoinController {
         return this.coinService.findAll(sortBy, direction);
     }
 
-    //특정 코인 정보 (name, ticker, description, created_at)
+    //특정 코인 정보
     @Get('/:id')
     findOne(@Param('id')id: number): Promise<Coins> {
         return this.coinService.findOne(id);
@@ -31,6 +31,7 @@ export class CoinController {
         return this.coinService.getHolder(id);
     }
 
+    //거래 정보
     @Get('/:id/trade')
     getTradeHistory(@Param('id') coinId: number): Promise<Trade[]> {
         return this.coinService.getTradeHistory(coinId);

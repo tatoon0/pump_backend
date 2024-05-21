@@ -8,25 +8,25 @@ import { Coins } from 'src/coin/coin.entity';
 export class UserController {
     constructor(private userService: UserService) {}
 
-    //모든 유저 정보 (name, wallet_address, created_at)
+    //모든 유저 정보
     @Get()
     findAll(): Promise<Users[]> {
         return this.userService.findAll();
     }
 
-    //특정 유저 정보 (name, wallet_address, created_at)
+    //특정 유저 정보
     @Get('/:id')
     findOne(@Param('id')id: number): Promise<Users> {
         return this.userService.findOne(id);
     }
 
-
+    //보유중인 코인
     @Get('/:id/held')
     getHeldCoin(@Param('id')id: number): Promise<UserCoin[]> {
         return this.userService.getHeldCoin(id)
     }
 
-    //발행한 코인 (name, ticker, description, created_at)
+    //발행한 코인
     @Get('/:id/create')
     getCreateCoin(@Param('id')id: number): Promise<Coins[]> {
         return this.userService.getCreateCoin(id)

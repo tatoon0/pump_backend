@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Users } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,46 +19,42 @@ export class UserService {
     ) {}
 
     async findAll(): Promise<Users[]> {
-        return await this.userRepository.find()
+        return await this.userRepository.find();
     }
 
     async findOne(id: number): Promise<Users> {
-        return await this.userRepository.findOne({
-            where: {
-                id: id
-            }
+        const user = await this.userRepository.findOne({
+            where: { id },
         });
+        if (!user) {
+            throw new NotFoundException(`User with ID ${id} not found`);
+        }
+        return user;
     }
 
     async create(name: string, wallet_address: string): Promise<void> {
-        const user = this.userRepository.create({
-            name,
-            wallet_address,
-        })
+        const user = this.userRepository.create({ name, wallet_address });
         await this.userRepository.save(user);
     }
 
     async getHeldCoin(id: number): Promise<UserCoin[]> {
         const founds = await this.usercoinRepository.find({
-            where: {
-                user: {
-                    id: id
-                }
-            }
-        })
-        for (const found of founds) {
-            await found.coin;
+            where: { user: { id } },
+            relations: ['coin'],
+        });
+        if (founds.length === 0) {
+            throw new NotFoundException(`No coins found for user with ID ${id}`);
         }
-        return founds
+        return founds;
     }
 
     async getCreateCoin(id: number): Promise<Coins[]> {
-        return await this.coinRepository.find({
-            where: {
-                creator: {
-                    id: id
-                }
-            }
-        })
+        const coins = await this.coinRepository.find({
+            where: { creator: { id } },
+        });
+        if (coins.length === 0) {
+            throw new NotFoundException(`No coins created by user with ID ${id}`);
+        }
+        return coins;
     }
 }

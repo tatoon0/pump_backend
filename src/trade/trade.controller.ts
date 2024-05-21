@@ -6,6 +6,7 @@ import { Trade } from './trade.entity';
 export class TradeController {
     constructor(private tradeService: TradeService) {}
 
+    //코인 거래
     @Post()
     tradeCoin(
         @Body('coin_id')coin_id: number,

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Trade } from './trade.entity';
 import { Repository } from 'typeorm';
@@ -6,7 +6,6 @@ import { Coins } from 'src/coin/coin.entity';
 import { Users } from 'src/user/user.entity';
 import { CoinStat } from 'src/coin/coin_stat.entity';
 import { UserCoin } from 'src/user_coin/user_coin.entity';
-import { Connection } from 'mysql2/typings/mysql/lib/Connection';
 
 @Injectable()
 export class TradeService {
@@ -34,72 +33,74 @@ export class TradeService {
         amount: number,
         price: number
     ): Promise<void> {
-        const found = await this.usercoinRepository.findOne({
+        if (type !== ('buy' || 'sell')) {
+            throw new BadRequestException('Invalid trade type')
+        }
+
+        const user = await this.userRepository.findOne({
             where: {
-                user: {id: user_id},
-                coin: {id: coin_id}
+                id: user_id
+            }
+        });
+        if (!user) {
+            throw new NotFoundException(`User with ID ${user_id} not found`);
+        }
+
+        const coin = await this.coinRepository.findOne({
+            where: {
+                id: coin_id
+            }
+        });
+        if (!coin) {
+            throw new NotFoundException(`Coin with ID ${coin_id} not found`);
+        }
+
+        let usercoin = await this.usercoinRepository.findOne({
+            where: {
+                user: { id: user_id },
+                coin: { id: coin_id }
             }
         });
 
-        let usercoin: UserCoin
-
-        if (!found) {
+        if (!usercoin) {
             usercoin = this.usercoinRepository.create({
-                user: await this.userRepository.findOne({
-                    where: {
-                        id: user_id
-                    }
-                }),
-                coin: await this.coinRepository.findOne({
-                    where: {
-                        id: coin_id
-                    }
-                })
-            })
+                user,
+                coin
+            });
             await this.usercoinRepository.save(usercoin);
-        } else {
-            usercoin = found;
         }
 
         const coinstat = await this.coinstatRepository.findOne({
             where: {
-              coin: { id: coin_id }
+                coin: { id: coin_id }
             }
         });
+        if (!coinstat) {
+            throw new NotFoundException(`CoinStat for coin with ID ${coin_id} not found`);
+        }
 
         coinstat.last_trade_date = new Date();
 
-        //console.log('Before update:', usercoin.amount, coinstat.stock, coinstat.total_funded);
         if (type === 'buy') {
-          usercoin.amount += amount;
-          coinstat.stock -= amount;
-          coinstat.total_funded += price;
-          //console.log('After buy:', usercoin.amount, coinstat.stock, coinstat.total_funded);
+            usercoin.amount += amount;
+            coinstat.stock -= amount;
+            coinstat.total_funded += price;
         } else if (type === 'sell') {
-          usercoin.amount -= amount;
-          coinstat.stock += amount;
-          coinstat.total_funded -= price;
-          //console.log('After sell:', usercoin.amount, coinstat.stock, coinstat.total_funded);
+            usercoin.amount -= amount;
+            coinstat.stock += amount;
+            coinstat.total_funded -= price;
         }
-        
+
         const trade = this.tradeRepository.create({
-            coin: await this.coinRepository.findOne({
-                where: {
-                    id: coin_id
-                }
-            }),
-            user: await this.userRepository.findOne({
-                where: {
-                    id: user_id
-                }
-            }),
+            coin,
+            user,
             type,
             amount,
             price
-        })
+        });
 
-        await this.usercoinRepository.save(usercoin)
-        await this.coinstatRepository.save(coinstat)
-        await this.tradeRepository.save(trade)
+        await this.usercoinRepository.save(usercoin);
+        await this.coinstatRepository.save(coinstat);
+        await this.tradeRepository.save(trade);
     }
 }
