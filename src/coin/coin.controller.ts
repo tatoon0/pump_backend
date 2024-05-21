@@ -2,6 +2,7 @@ import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { CoinService } from './coin.service';
 import { Coins } from './coin.entity';
 import { UserCoin } from 'src/user_coin/user_coin.entity';
+import { Trade } from 'src/trade/trade.entity';
 
 @Controller('coin')
 export class CoinController {
@@ -28,6 +29,11 @@ export class CoinController {
     @Get('/:id/holder')
     getHolder(@Param('id')id: number): Promise<UserCoin[]> {
         return this.coinService.getHolder(id);
+    }
+
+    @Get('/:id/trade')
+    getTradeHistory(@Param('id') coinId: number): Promise<Trade[]> {
+        return this.coinService.getTradeHistory(coinId);
     }
 
     //코인 정보 등록

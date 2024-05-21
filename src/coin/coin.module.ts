@@ -6,10 +6,11 @@ import { Coins } from './coin.entity';
 import { Users } from 'src/user/user.entity';
 import { CoinStat } from './coin_stat.entity';
 import { UserCoin } from 'src/user_coin/user_coin.entity';
+import { Trade } from 'src/trade/trade.entity';
 
 @Module({
   imports:[
-    TypeOrmModule.forFeature([Coins, CoinStat, Users, UserCoin])
+    TypeOrmModule.forFeature([Coins, CoinStat, Users, UserCoin, Trade])
   ],
   controllers: [CoinController],
   providers: [CoinService]

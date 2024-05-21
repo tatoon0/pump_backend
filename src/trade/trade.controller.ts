@@ -1,5 +1,6 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { TradeService } from './trade.service';
+import { Trade } from './trade.entity';
 
 @Controller('trade')
 export class TradeController {

@@ -5,6 +5,7 @@ import { OrderedBulkOperation, Repository } from 'typeorm';
 import { Users } from 'src/user/user.entity';
 import { CoinStat } from './coin_stat.entity';
 import { UserCoin } from 'src/user_coin/user_coin.entity';
+import { Trade } from 'src/trade/trade.entity';
 
 @Injectable()
 export class CoinService {
@@ -19,7 +20,10 @@ export class CoinService {
         private userRepository: Repository<Users>,
 
         @InjectRepository(UserCoin)
-        private usercoinRepository: Repository<UserCoin>
+        private usercoinRepository: Repository<UserCoin>,
+
+        @InjectRepository(Trade)
+        private tradeRepository: Repository<Trade>
     ) {}
 
     async findAll(sortBy: string, orderDirection: string): Promise<Coins[]> {
@@ -41,7 +45,6 @@ export class CoinService {
                 order = { 'coinstat.last_trade_date': orderDirection };
                 break;
         }
-    
         return await this.coinRepository.createQueryBuilder('coin')
             .leftJoinAndSelect('coin.coinStat', 'coinstat')
             .orderBy(order)
@@ -57,12 +60,20 @@ export class CoinService {
     }
     
     async getHolder(id: number): Promise<UserCoin[]> {
-        return await this.usercoinRepository.createQueryBuilder('usercoin')
-        .leftJoinAndSelect('usercoin.user', 'user')
-        .leftJoinAndSelect('usercoin.coin', 'coin')
-        .where('usercoin.coin.id = :id', { id })
-        .orderBy('usercoin.amount', 'DESC')
-        .getMany();
+        const holders = await this.usercoinRepository.find({
+            where: {
+                coin: {
+                    id: id
+                }
+            },
+            order: {
+                amount: 'desc'
+            }
+        })
+        for (const holder of holders) {
+            await holder.user;
+        }
+        return holders
     }
 
     async create(
@@ -94,6 +105,17 @@ export class CoinService {
 
         coin.coinStat = coinstat
         await this.coinRepository.save(coin);
+    }
 
+    async getTradeHistory(coinId: number): Promise<Trade[]> {
+        const trades = await this.tradeRepository.find({
+            where: { coin: { id: coinId } },
+            order: { trade_date: 'DESC' }
+        });
+        for (const trade of trades) {
+            await trade.user
+        }
+
+        return trades;
     }
 }
