@@ -7,11 +7,11 @@ export class UserCoin {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @ManyToOne(() => Users)
+  @ManyToOne(() => Users, {lazy: true})
   @JoinColumn({name: 'user_id'})
   user: Users;
 
-  @ManyToOne(() => Coins)
+  @ManyToOne(() => Coins, {lazy: true})
   @JoinColumn({name: 'coin_id'})
   coin: Coins;
 

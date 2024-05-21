@@ -4,6 +4,7 @@ import { Coins } from './coin.entity';
 import { OrderedBulkOperation, Repository } from 'typeorm';
 import { Users } from 'src/user/user.entity';
 import { CoinStat } from './coin_stat.entity';
+import { UserCoin } from 'src/user_coin/user_coin.entity';
 
 @Injectable()
 export class CoinService {
@@ -15,7 +16,10 @@ export class CoinService {
         private coinStatRepository: Repository<CoinStat>,
 
         @InjectRepository(Users)
-        private userRepository: Repository<Users>
+        private userRepository: Repository<Users>,
+
+        @InjectRepository(UserCoin)
+        private usercoinRepository: Repository<UserCoin>
     ) {}
 
     async findAll(sortBy: string, orderDirection: string): Promise<Coins[]> {
@@ -50,6 +54,15 @@ export class CoinService {
                 id: id
             }
         });
+    }
+    
+    async getHolder(id: number): Promise<UserCoin[]> {
+        return await this.usercoinRepository.createQueryBuilder('usercoin')
+        .leftJoinAndSelect('usercoin.user', 'user')
+        .leftJoinAndSelect('usercoin.coin', 'coin')
+        .where('usercoin.coin.id = :id', { id })
+        .orderBy('usercoin.amount', 'DESC')
+        .getMany();
     }
 
     async create(

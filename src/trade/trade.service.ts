@@ -98,8 +98,6 @@ export class TradeService {
             price
         })
 
-        
-
         await this.usercoinRepository.save(usercoin)
         await this.coinstatRepository.save(coinstat)
         await this.tradeRepository.save(trade)

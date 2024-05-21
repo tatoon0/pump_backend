@@ -21,13 +21,13 @@ export class UserController {
     }
 
 
-    @Get('/:id/coin/held')
+    @Get('/:id/held')
     getHeldCoin(@Param('id')id: number): Promise<UserCoin[]> {
         return this.userService.getHeldCoin(id)
     }
 
     //발행한 코인 (name, ticker, description, created_at)
-    @Get('/:id/coin/create')
+    @Get('/:id/create')
     getCreateCoin(@Param('id')id: number): Promise<Coins[]> {
         return this.userService.getCreateCoin(id)
     }
