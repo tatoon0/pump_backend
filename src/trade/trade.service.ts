@@ -33,10 +33,10 @@ export class TradeService {
         amount: number,
         price: number
     ): Promise<void> {
-        if (type !== ('buy' || 'sell')) {
+        if (type !== 'buy' && type !== 'sell') {
             throw new BadRequestException('Invalid trade type')
         }
-
+        
         const user = await this.userRepository.findOne({
             where: {
                 id: user_id
@@ -69,7 +69,7 @@ export class TradeService {
             });
             await this.usercoinRepository.save(usercoin);
         }
-
+        
         const coinstat = await this.coinstatRepository.findOne({
             where: {
                 coin: { id: coin_id }
@@ -78,17 +78,17 @@ export class TradeService {
         if (!coinstat) {
             throw new NotFoundException(`CoinStat for coin with ID ${coin_id} not found`);
         }
-
+        
         coinstat.last_trade_date = new Date();
-
+        
         if (type === 'buy') {
-            usercoin.amount += amount;
-            coinstat.stock -= amount;
-            coinstat.total_funded += price;
+            usercoin.amountNumber += amount;
+            coinstat.stockNumber -= amount;
+            coinstat.total_fundedNumber += price;
         } else if (type === 'sell') {
-            usercoin.amount -= amount;
-            coinstat.stock += amount;
-            coinstat.total_funded -= price;
+            usercoin.amountNumber -= amount;
+            coinstat.stockNumber += amount;
+            coinstat.total_fundedNumber -= price;
         }
 
         const trade = this.tradeRepository.create({
