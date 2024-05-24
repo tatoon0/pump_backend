@@ -26,4 +26,7 @@ export class Coins {
     @OneToOne(() => CoinStat, { lazy: true })
     @JoinColumn({name: 'coinstat_id'})
     coinStat: CoinStat;
+
+    @Column({ type: 'bool', default: false})
+    funding_complete: boolean;
 }

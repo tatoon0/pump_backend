@@ -13,4 +13,7 @@ export class Users {
 
     @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
     created_at: Date;
+
+    @Column({ type: 'bool', default: false })
+    is_artist: boolean;
 }
