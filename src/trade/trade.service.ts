@@ -2,10 +2,10 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Trade } from './trade.entity';
 import { DataSource, Repository } from 'typeorm';
-import { Coins } from 'src/coin/coin.entity';
-import { Users } from 'src/user/user.entity';
-import { CoinStat } from 'src/coin/coin_stat.entity';
-import { UserCoin } from 'src/user_coin/user_coin.entity';
+import { Coins } from '../coin/coin.entity';
+import { Users } from '../user/user.entity';
+import { CoinStat } from '../coin/coin_stat.entity';
+import { UserCoin } from '../user_coin/user_coin.entity';
 
 @Injectable()
 export class TradeService {

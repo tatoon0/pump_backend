@@ -1,4 +1,4 @@
-import { Users } from "src/user/user.entity";
+import { Users } from "../user/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { CoinStat } from "./coin_stat.entity";
 

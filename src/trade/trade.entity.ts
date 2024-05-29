@@ -1,5 +1,5 @@
-import { Coins } from "src/coin/coin.entity";
-import { Users } from "src/user/user.entity";
+import { Coins } from "../coin/coin.entity";
+import { Users } from "../user/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()

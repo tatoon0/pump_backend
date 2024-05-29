@@ -1,8 +1,8 @@
 import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { Users } from './user.entity';
-import { UserCoin } from 'src/user_coin/user_coin.entity';
-import { Coins } from 'src/coin/coin.entity';
+import { UserCoin } from '../user_coin/user_coin.entity';
+import { Coins } from '../coin/coin.entity';
 
 @Controller('user')
 export class UserController {

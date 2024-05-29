@@ -2,8 +2,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { Users } from './user.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserCoin } from 'src/user_coin/user_coin.entity';
-import { Coins } from 'src/coin/coin.entity';
+import { UserCoin } from '../user_coin/user_coin.entity';
+import { Coins } from '../coin/coin.entity';
 
 @Injectable()
 export class UserService {

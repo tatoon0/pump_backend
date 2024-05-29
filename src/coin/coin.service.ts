@@ -2,10 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Coins } from './coin.entity';
 import { Repository } from 'typeorm';
-import { Users } from 'src/user/user.entity';
+import { Users } from '../user/user.entity';
 import { CoinStat } from './coin_stat.entity';
-import { UserCoin } from 'src/user_coin/user_coin.entity';
-import { Trade } from 'src/trade/trade.entity';
+import { UserCoin } from '../user_coin/user_coin.entity';
+import { Trade } from '../trade/trade.entity';
 
 @Injectable()
 export class CoinService {
