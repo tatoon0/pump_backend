@@ -9,33 +9,15 @@ import { UserCoin } from './user_coin/user_coin.entity';
 import { TradeModule } from './trade/trade.module';
 import { Trade } from './trade/trade.entity';
 
-// @Module({
-//   imports: [
-//     TypeOrmModule.forRoot({
-//       type: 'mysql',
-//       host: 'hackathemy.me',
-//       port: 3306,
-//       username: 'adfpump',
-//       password: 'Adfadf!1',
-//       database: 'adfpump',
-//       synchronize: true,
-//       entities: [Users, Coins, CoinStat, UserCoin, Trade],
-//     }),
-//     UserModule,
-//     CoinModule,
-//     TradeModule,
-//   ]
-// })
-
 @Module({
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: 'hackathemy.me',
       port: 3306,
-      username: 'root',
-      password: '1q2w3e4r',
-      database: 'pump-backend',
+      username: 'adfpump',
+      password: 'Adfadf!1',
+      database: 'adfpump',
       synchronize: true,
       entities: [Users, Coins, CoinStat, UserCoin, Trade],
     }),
@@ -44,4 +26,22 @@ import { Trade } from './trade/trade.entity';
     TradeModule,
   ]
 })
+
+// @Module({
+//   imports: [
+//     TypeOrmModule.forRoot({
+//       type: 'mysql',
+//       host: 'localhost',
+//       port: 3306,
+//       username: 'root',
+//       password: '1q2w3e4r',
+//       database: 'pump-backend',
+//       synchronize: true,
+//       entities: [Users, Coins, CoinStat, UserCoin, Trade],
+//     }),
+//     UserModule,
+//     CoinModule,
+//     TradeModule,
+//   ]
+// })
 export class AppModule {}
