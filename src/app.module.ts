@@ -13,7 +13,7 @@ import { Trade } from './trade/trade.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'localhost',
+      host: 'hackathemy.me',
       port: 3306,
       username: 'adfpump',
       password: 'Adfadf!1',
