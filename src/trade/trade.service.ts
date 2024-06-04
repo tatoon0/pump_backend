@@ -6,6 +6,7 @@ import { Coins } from '../coin/coin.entity';
 import { Users } from '../user/user.entity';
 import { CoinStat } from '../coin/coin_stat.entity';
 import { UserCoin } from '../user_coin/user_coin.entity';
+import { TradeDto } from './dto/trade.dto';
 
 @Injectable()
 export class TradeService {
@@ -28,13 +29,15 @@ export class TradeService {
         private dataSoource: DataSource
     ) {}
 
-    async tradeCoin(
-        coin_id: number,
-        user_id: number,
-        type: string,
-        amount: number,
-        price: number
-    ): Promise<void> {
+    async tradeCoin(tradeDto: TradeDto): Promise<void> {
+        const {
+            coin_id,
+            user_id,
+            type,
+            amount,
+            price
+        } = tradeDto;
+
         // trade type check
         if (type !== 'buy' && type !== 'sell') {
             throw new BadRequestException('Invalid trade type')
