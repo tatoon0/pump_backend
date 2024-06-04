@@ -29,4 +29,7 @@ export class Coins {
 
     @Column({ type: 'bool', default: false})
     funding_complete: boolean;
+
+    @Column({ type: 'text', nullable: true })
+    img_url: string;
 }

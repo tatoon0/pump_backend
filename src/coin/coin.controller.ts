@@ -44,7 +44,8 @@ export class CoinController {
         @Body('name')name: string,
         @Body('ticker')ticker: string,
         @Body('description')description: string,
-    ) {
-        return this.coinService.create(creator_id, name, ticker, description);
+        @Body('img_url')img_url: string
+    ): Promise<number> {
+        return this.coinService.create(creator_id, name, ticker, description, img_url);
     }
 }

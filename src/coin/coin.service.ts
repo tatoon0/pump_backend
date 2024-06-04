@@ -75,8 +75,9 @@ export class CoinService {
         creator_id: number,
         name: string,
         ticker: string,
-        description: string
-    ): Promise<void> {
+        description: string,
+        img_url: string
+    ): Promise<number> {
         const creator = await this.userRepository.findOne({ where: { id: creator_id } });
         if (!creator) {
             throw new NotFoundException(`User with ID ${creator_id} not found`);
@@ -86,7 +87,8 @@ export class CoinService {
             creator,
             name,
             ticker,
-            description
+            description,
+            img_url
         });
         await this.coinRepository.save(coin);
 
@@ -95,6 +97,8 @@ export class CoinService {
 
         coin.coinStat = coinstat;
         await this.coinRepository.save(coin);
+
+        return coin.id;
     }
 
     async getTradeHistory(coinId: number): Promise<Trade[]> {
