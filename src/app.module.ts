@@ -13,11 +13,11 @@ import { Trade } from './trade/trade.entity';
   imports: [
     TypeOrmModule.forRoot({
       type: 'mysql',
-      host: 'hackathemy.me',
+      host: 'localhost',
       port: 3306,
-      username: 'adfpump',
-      password: 'Adfadf!1',
-      database: 'adfpump',
+      username: 'username',
+      password: 'password',
+      database: 'pump-backend',
       synchronize: true,
       entities: [Users, Coins, CoinStat, UserCoin, Trade],
     }),
@@ -26,22 +26,4 @@ import { Trade } from './trade/trade.entity';
     TradeModule,
   ],
 })
-
-// @Module({
-//   imports: [
-//     TypeOrmModule.forRoot({
-//       type: 'mysql',
-//       host: 'localhost',
-//       port: 3306,
-//       username: 'root',
-//       password: '1q2w3e4r',
-//       database: 'pump-backend',
-//       synchronize: true,
-//       entities: [Users, Coins, CoinStat, UserCoin, Trade],
-//     }),
-//     UserModule,
-//     CoinModule,
-//     TradeModule,
-//   ],
-// })
 export class AppModule {}
